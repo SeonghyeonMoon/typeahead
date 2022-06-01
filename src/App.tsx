@@ -5,16 +5,13 @@ import { User, Mbti } from './components/type';
 function App() {
 	return (
 		<>
-			<AutoComplete
-				getLabel={(item) => `${item.name}(${item.email})`}
-				// getLabel={Template}
-				api={findMatchedUsers}
-			/>
-			<AutoComplete
-				getLabel={(item) => `${item.name}(${item.email})`}
-				// getLabel={Template}
-				api={findMatchedMbtis}
-			/>
+			<AutoComplete<User> api={findMatchedUsers}>
+				<Template />
+			</AutoComplete>
+
+			<AutoComplete<Mbti> api={findMatchedMbtis}>
+				<Template />
+			</AutoComplete>
 		</>
 	);
 }
@@ -26,5 +23,9 @@ interface Props {
 }
 
 const Template: React.FC<Props> = ({ item }) => {
-	return <li>{item.name}</li>;
+	return (
+		<li>
+			{item.name}({item.email})
+		</li>
+	);
 };

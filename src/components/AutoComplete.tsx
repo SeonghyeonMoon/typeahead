@@ -1,15 +1,20 @@
-import { ChangeEvent, KeyboardEvent, useEffect, useState } from 'react';
+import React, {
+	ChangeEvent,
+	KeyboardEvent,
+	ReactElement,
+	useEffect,
+	useState,
+} from 'react';
 import styled from 'styled-components';
-import { User, Mbti } from './type';
 
-interface Props {
-	getLabel: (item: User | Mbti) => string;
-	api: (keyWord: string) => User[] | Mbti[];
+interface Props<T> {
+	api: (keyWord: string) => T[];
+	children: ReactElement;
 }
 
-const AutoComplete: React.FC<Props> = ({ api, getLabel }) => {
+function AutoComplete<T>({ api, children }: Props<T>) {
 	const [inputData, setInputData] = useState('');
-	const [matchedList, setMatchedList] = useState<User[]>([]);
+	const [matchedList, setMatchedList] = useState<T[]>([]);
 	const [selectedIndex, setSelectedIndex] = useState(0);
 	const [isOpen, setIsOpen] = useState(false);
 
@@ -52,8 +57,10 @@ const AutoComplete: React.FC<Props> = ({ api, getLabel }) => {
 				onChange={onChange}
 				onKeyDown={checkKey}
 				onBlur={() => {
-					setSelectedIndex(0);
-					setIsOpen(false);
+					setTimeout(() => {
+						setSelectedIndex(0);
+						setIsOpen(false);
+					}, 100);
 				}}
 			/>
 			{isOpen && (
@@ -61,20 +68,22 @@ const AutoComplete: React.FC<Props> = ({ api, getLabel }) => {
 					{matchedList &&
 						matchedList.map((matchedItem, index) => (
 							<MatchedUser
-								key={matchedItem.id}
+								key={index}
 								isSelected={index === selectedIndex}
 								onClick={() => {
 									selectItem(matchedItem.name);
 								}}
 							>
-								{getLabel(matchedItem)}
+								{React.cloneElement(children, {
+									item: matchedItem,
+								})}
 							</MatchedUser>
 						))}
 				</MatchedList>
 			)}
 		</Container>
 	);
-};
+}
 
 export default AutoComplete;
 

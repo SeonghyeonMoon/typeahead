@@ -1,9 +1,20 @@
-export type userDataType = {
-  id: string;
-  age: number;
-  name: string;
-  gender: 'male' | 'femail';
-  email: 'string';
-  phone: 'string';
-  address: 'string';
-}
+export type User = {
+	id: string;
+	age: number;
+	name: string;
+	gender: string;
+	email: string;
+	phone: string;
+	address: string;
+};
+
+export type Mbti = {
+	id: string;
+	age: number;
+	name: string;
+	gender: string;
+	mbti: string;
+	email: string;
+	phone: string;
+	address: string;
+};

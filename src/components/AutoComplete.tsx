@@ -1,41 +1,46 @@
-import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, KeyboardEvent, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import findMatched from './findMatched';
-import { userDataType } from './type';
+import { User, Mbti } from './type';
 
-const AutoComplete = () => {
+interface Props {
+	getLabel: (item: User | Mbti) => string;
+	api: (keyWord: string) => User[] | Mbti[];
+}
+
+const AutoComplete: React.FC<Props> = ({ api, getLabel }) => {
 	const [inputData, setInputData] = useState('');
-	const [matchedList, setMatchedList] = useState<userDataType[]>([]);
+	const [matchedList, setMatchedList] = useState<User[]>([]);
 	const [selectedIndex, setSelectedIndex] = useState(0);
+	const [isOpen, setIsOpen] = useState(false);
 
 	const onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
 		setInputData(value);
 		setSelectedIndex(0);
 	};
 
-	const changeSelete = ({ keyCode }: KeyboardEvent<HTMLInputElement>) => {
-		if (keyCode === 38) {
+	const checkKey = ({ key }: KeyboardEvent<HTMLInputElement>) => {
+		if (key === 'ArrowUp') {
 			setSelectedIndex(
 				(prev) => (prev - 1 + matchedList.length) % matchedList.length
 			);
-		} else if (keyCode === 40) {
+		} else if (key === 'ArrowDown') {
 			setSelectedIndex((prev) => (prev + 1) % matchedList.length);
+		} else if (key === 'Enter') {
+			setInputData(matchedList[selectedIndex].name);
 		}
 	};
 
 	useEffect(() => {
-		setMatchedList(findMatched(inputData));
+		const timer = setTimeout(() => {
+			setMatchedList(api(inputData).slice(0, 5));
+		}, 500);
+		return () => {
+			clearTimeout(timer);
+		};
 	}, [inputData]);
 
-	useEffect(() => {
-		console.log(selectedIndex);
-		scrollToSeleted();
-	}, [selectedIndex]);
-
-	const selectedRef = useRef<HTMLDivElement>(null);
-
-	const scrollToSeleted = () => {
-		selectedRef.current?.scrollIntoView({ behavior: 'smooth' });
+	const selectItem = (name: string) => {
+		setInputData(name);
 	};
 
 	return (
@@ -43,26 +48,30 @@ const AutoComplete = () => {
 			<Input
 				type='text'
 				value={inputData}
+				onFocus={() => setIsOpen(true)}
 				onChange={onChange}
-				onKeyDown={changeSelete}
-				onBlur={() => setSelectedIndex(0)}
+				onKeyDown={checkKey}
+				onBlur={() => {
+					setSelectedIndex(0);
+					setIsOpen(false);
+				}}
 			/>
-			<MatchedList>
-				{matchedList &&
-					matchedList.map(
-						({ id, name, email, age, gender, phone, address }, index) => (
-							<MatchedUser key={id} isSelected={index === selectedIndex}>
-								{index === selectedIndex && <div ref={selectedRef} />}
-								<p>Name : {name}</p>
-								<p>Age : {age}</p>
-								<p>Email : {email}</p>
-								<p>Gender : {gender}</p>
-								<p>Phone : {phone}</p>
-								<p>Address : {address}</p>
+			{isOpen && (
+				<MatchedList>
+					{matchedList &&
+						matchedList.map((matchedItem, index) => (
+							<MatchedUser
+								key={matchedItem.id}
+								isSelected={index === selectedIndex}
+								onClick={() => {
+									selectItem(matchedItem.name);
+								}}
+							>
+								{getLabel(matchedItem)}
 							</MatchedUser>
-						)
-					)}
-			</MatchedList>
+						))}
+				</MatchedList>
+			)}
 		</Container>
 	);
 };
@@ -71,7 +80,7 @@ export default AutoComplete;
 
 const Container = styled.div`
 	width: 500px;
-	height: 500px;
+	height: 300px;
 	margin: 50px auto;
 	* {
 		box-sizing: border-box;
@@ -84,14 +93,9 @@ const Input = styled.input`
 	height: 50px;
 	border-radius: 10px;
 	padding: 10px;
-	&:focus + * {
-		display: block;
-	}
 `;
 
 const MatchedList = styled.ul`
-	display: none;
-	height: 1250px;
 	overflow-y: scroll;
 	&::-webkit-scrollbar {
 		width: 5px;
@@ -103,10 +107,13 @@ const MatchedList = styled.ul`
 `;
 
 const MatchedUser = styled.li<{ isSelected: boolean }>`
-	height: 250px;
 	padding: 10px 20px;
 	${({ isSelected }) => isSelected && 'background-color: black; color: white;'}
 	& + & {
 		border-top: 1px solid black;
+	}
+	&:hover {
+		background-color: black;
+		color: white;
 	}
 `;

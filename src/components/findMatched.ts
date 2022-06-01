@@ -1,15 +1,12 @@
-import { userDataType } from './type';
-export default function findMatched(inputData: string) {
-	const json: userDataType[] = require('./generated.json');
-	const newData: userDataType[] = [];
-	for (let userData of json) {
-		for (let data of Object.values(userData)) {
-			data = String(data);
-			if (data.includes(inputData)) {
-				newData.push(userData);
-				break;
-			}
-		}
+import { User, Mbti } from './type';
+import users from './users.json';
+import mbtis from './mbti.json';
+
+export const findMatchedUsers = (keyWord: string) => {
+	return users.filter(
+		(user: User) => user.name.includes(keyWord) || user.email.includes(keyWord)
+		);
 	}
-	return newData;
-}
+
+export const findMatchedMbtis = (keyWord: string) =>
+	mbtis.filter((mbti: Mbti) => mbti.mbti.includes(keyWord));

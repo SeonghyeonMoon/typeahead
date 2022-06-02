@@ -6,11 +6,11 @@ function App() {
 	return (
 		<>
 			<AutoComplete<User> api={findMatchedUsers}>
-				<Template />
+				<UserTemplate />
 			</AutoComplete>
 
 			<AutoComplete<Mbti> api={findMatchedMbtis}>
-				<Template />
+				<MbtiTemplate />
 			</AutoComplete>
 		</>
 	);
@@ -22,7 +22,15 @@ interface Props {
 	item: User | Mbti;
 }
 
-const Template: React.FC<Props> = ({ item }) => {
+const UserTemplate = ({ item }: Props) => {
+	return (
+		<li>
+			{item.name}({item.email})
+		</li>
+	);
+};
+
+const MbtiTemplate = ({ item }: Props) => {
 	return (
 		<li>
 			{item.name}({item.email})

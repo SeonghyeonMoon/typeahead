@@ -1,3 +1,4 @@
+import styled from 'styled-components';
 import AutoComplete from './components/AutoComplete';
 import { findMatchedMbtis, findMatchedUsers } from './components/findMatched';
 import { User, Mbti } from './components/type';
@@ -5,35 +6,30 @@ import { User, Mbti } from './components/type';
 function App() {
 	return (
 		<>
-			<AutoComplete<User> api={findMatchedUsers}>
-				<UserTemplate />
-			</AutoComplete>
-
-			<AutoComplete<Mbti> api={findMatchedMbtis}>
-				<MbtiTemplate />
-			</AutoComplete>
+			<AutoComplete<User> api={findMatchedUsers} template={UserTemplate} />
+			<AutoComplete<Mbti> api={findMatchedMbtis} template={MbtiTemplate} />
 		</>
 	);
 }
 
 export default App;
 
-interface Props {
-	item: User | Mbti;
-}
-
-const UserTemplate = ({ item }: Props) => {
+const UserTemplate = (data: User) => {
 	return (
-		<li>
-			{item.name}({item.email})
-		</li>
+		<UserList>
+			{data.name}({data.email})
+		</UserList>
 	);
 };
 
-const MbtiTemplate = ({ item }: Props) => {
+const UserList = styled.li`
+	color: coral;
+`
+
+const MbtiTemplate = (data: Mbti) => {
 	return (
 		<li>
-			{item.name}({item.email})
+			{data.name}({data.mbti})
 		</li>
 	);
 };

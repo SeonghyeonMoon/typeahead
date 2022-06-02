@@ -9,10 +9,10 @@ import styled from 'styled-components';
 
 interface Props<T> {
 	api: (keyWord: string) => T[];
-	children: ReactElement;
+	template: (item: T) => JSX.Element;
 }
 
-function AutoComplete<T>({ api, children }: Props<T>) {
+function AutoComplete<T>({ api, template }: Props<T>) {
 	const [inputData, setInputData] = useState('');
 	const [matchedList, setMatchedList] = useState<T[]>([]);
 	const [selectedIndex, setSelectedIndex] = useState(0);
@@ -74,9 +74,7 @@ function AutoComplete<T>({ api, children }: Props<T>) {
 									selectItem(matchedItem.name);
 								}}
 							>
-								{React.cloneElement(children, {
-									item: matchedItem,
-								})}
+								{template(matchedItem)}
 							</MatchedUser>
 						))}
 				</MatchedList>

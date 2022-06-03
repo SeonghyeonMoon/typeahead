@@ -6,15 +6,27 @@ import { User, Mbti } from './components/type';
 function App() {
 	return (
 		<>
-			<AutoComplete<User> api={findMatchedUsers} template={UserTemplate} />
-			<AutoComplete<Mbti> api={findMatchedMbtis} template={MbtiTemplate} />
+			<AutoComplete<User>
+				api={findMatchedUsers}
+				template={UserTemplate}
+				standard='name'
+			/>
+			<AutoComplete<Mbti>
+				api={findMatchedMbtis}
+				template={MbtiTemplate}
+				standard='name'
+			/>
 		</>
 	);
 }
 export default App;
 
 // 사용자가 타입, 라벨, 스타일 코드만 지정하도록 변경 필요(onClick, isSelected 등 빼기)
-const UserTemplate = (data: User, isSelected: boolean, callback: () => void) => {
+const UserTemplate = (
+	data: User,
+	isSelected: boolean,
+	callback: () => void
+) => {
 	return (
 		<UserItem isSelected={isSelected} onClick={callback}>
 			{data.name}({data.email})
@@ -22,7 +34,7 @@ const UserTemplate = (data: User, isSelected: boolean, callback: () => void) => 
 	);
 };
 
-const UserItem = styled.li<{isSelected: boolean}>`
+const UserItem = styled.li<{ isSelected: boolean }>`
 	color: coral;
 	padding: 10px 20px;
 	${({ isSelected }) => isSelected && 'background-color: black; color: white;'}
@@ -33,17 +45,26 @@ const UserItem = styled.li<{isSelected: boolean}>`
 		background-color: black;
 		color: white;
 	}
-`
+`;
 
-const MbtiTemplate = (data: Mbti, isSelected: boolean, callback: () => void) => {
+const MbtiTemplate = (
+	data: Mbti,
+	isSelected: boolean,
+	callback: () => void
+) => {
 	return (
-		<MbtiItem isSelected={isSelected} onClick={() => {callback}}>
+		<MbtiItem
+			isSelected={isSelected}
+			onClick={() => {
+				callback;
+			}}
+		>
 			{data.name}({data.mbti})
 		</MbtiItem>
 	);
 };
 
-const MbtiItem = styled.li<{isSelected: boolean}>`
+const MbtiItem = styled.li<{ isSelected: boolean }>`
 	color: beige;
 	padding: 10px 20px;
 	${({ isSelected }) => isSelected && 'background-color: black; color: white;'}
@@ -54,4 +75,4 @@ const MbtiItem = styled.li<{isSelected: boolean}>`
 		background-color: black;
 		color: white;
 	}
-`
+`;

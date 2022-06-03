@@ -9,12 +9,12 @@ function App() {
 			<AutoComplete<User>
 				api={findMatchedUsers}
 				template={UserTemplate}
-				standard='name'
+				criterion='name'
 			/>
 			<AutoComplete<Mbti>
 				api={findMatchedMbtis}
 				template={MbtiTemplate}
-				standard='name'
+				criterion='name'
 			/>
 		</>
 	);

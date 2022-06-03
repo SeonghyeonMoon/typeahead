@@ -8,10 +8,10 @@ interface Props<T> {
 		isSelected: boolean,
 		callback: () => void
 	) => JSX.Element;
-	standard: string;
+	criterion: string;
 }
 
-function AutoComplete<T>({ api, template, standard }: Props<T>) {
+function AutoComplete<T>({ api, template, criterion }: Props<T>) {
 	const [inputData, setInputData] = useState('');
 	const [matchedList, setMatchedList] = useState<T[]>([]);
 	const [selectedIndex, setSelectedIndex] = useState(0);
@@ -30,8 +30,7 @@ function AutoComplete<T>({ api, template, standard }: Props<T>) {
 		} else if (key === 'ArrowDown') {
 			setSelectedIndex((prev) => (prev + 1) % matchedList.length);
 		} else if (key === 'Enter') {
-			// 기준 속성을 인자로 받도록 & 타입지정
-			setInputData(matchedList[selectedIndex][standard]);
+			setInputData(matchedList[selectedIndex][criterion]);
 		}
 	};
 
@@ -69,8 +68,7 @@ function AutoComplete<T>({ api, template, standard }: Props<T>) {
 						matchedList.map((matchedItem, index) => (
 							<React.Fragment key={index}>
 								{template(matchedItem, index === selectedIndex, () => {
-									// 기준 속성을 인자로 받도록 & 타입지정
-									selectItem(matchedItem[standard])
+									selectItem(matchedItem[criterion])
 								})}
 							</React.Fragment>
 						))}

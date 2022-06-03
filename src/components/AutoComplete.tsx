@@ -29,6 +29,7 @@ function AutoComplete<T>({ api, template }: Props<T>) {
 		} else if (key === 'ArrowDown') {
 			setSelectedIndex((prev) => (prev + 1) % matchedList.length);
 		} else if (key === 'Enter') {
+			// 기준 속성을 인자로 받도록 & 타입지정
 			setInputData(matchedList[selectedIndex].name);
 		}
 	};
@@ -67,6 +68,7 @@ function AutoComplete<T>({ api, template }: Props<T>) {
 						matchedList.map((matchedItem, index) => (
 							<React.Fragment key={index}>
 								{template(matchedItem, index === selectedIndex, () => {
+									// 기준 속성을 인자로 받도록 & 타입지정
 									selectItem(matchedItem.name);
 								})}
 							</React.Fragment>
@@ -105,16 +107,4 @@ const MatchedList = styled.ul`
 		background-color: #000;
 		border-radius: 10px;
 	}
-`;
-
-const MatchedUser = styled.li<{ isSelected: boolean }>`
-	padding: 10px 20px;
-	${({ isSelected }) => isSelected && 'background-color: black; color: white;'}
-	& + & {
-		border-top: 1px solid black;
-	}
-	&:hover {
-		background-color: black;
-		color: white;
-	}
-`;
+`

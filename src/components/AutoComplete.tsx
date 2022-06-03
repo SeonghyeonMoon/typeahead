@@ -6,7 +6,7 @@ interface Props<T> {
 	template: (
 		item: T,
 		isSelected: boolean,
-		_onClick: (item: T) => void
+		callback: () => void
 	) => JSX.Element;
 }
 
@@ -59,7 +59,7 @@ function AutoComplete<T>({ api, template }: Props<T>) {
 					setTimeout(() => {
 						setSelectedIndex(0);
 						setIsOpen(false);
-					}, 100);
+					}, 1000);
 				}}
 			/>
 			{isOpen && (
@@ -69,7 +69,7 @@ function AutoComplete<T>({ api, template }: Props<T>) {
 							<React.Fragment key={index}>
 								{template(matchedItem, index === selectedIndex, () => {
 									// 기준 속성을 인자로 받도록 & 타입지정
-									selectItem(matchedItem.name);
+									selectItem(matchedItem.name)
 								})}
 							</React.Fragment>
 						))}

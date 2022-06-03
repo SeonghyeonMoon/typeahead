@@ -11,13 +11,12 @@ function App() {
 		</>
 	);
 }
-
 export default App;
 
-// 사용자가 타입, 라벨, 스타일 코드만 지정하도록 변경 필요
-const UserTemplate = (data: User, isSelected: boolean, _onClick: (data: User) => void) => {
+// 사용자가 타입, 라벨, 스타일 코드만 지정하도록 변경 필요(onClick, isSelected 등 빼기)
+const UserTemplate = (data: User, isSelected: boolean, callback: () => void) => {
 	return (
-		<UserItem isSelected={isSelected} onClick={() => {_onClick}}>
+		<UserItem isSelected={isSelected} onClick={callback}>
 			{data.name}({data.email})
 		</UserItem>
 	);
@@ -36,9 +35,9 @@ const UserItem = styled.li<{isSelected: boolean}>`
 	}
 `
 
-const MbtiTemplate = (data: Mbti, isSelected: boolean, _onClick: (data: Mbti) => void) => {
+const MbtiTemplate = (data: Mbti, isSelected: boolean, callback: () => void) => {
 	return (
-		<MbtiItem isSelected={isSelected} onClick={() => {_onClick}}>
+		<MbtiItem isSelected={isSelected} onClick={() => {callback}}>
 			{data.name}({data.mbti})
 		</MbtiItem>
 	);

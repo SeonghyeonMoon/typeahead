@@ -1,15 +1,13 @@
-import React, {
-	ChangeEvent,
-	KeyboardEvent,
-	ReactElement,
-	useEffect,
-	useState,
-} from 'react';
+import React, { ChangeEvent, KeyboardEvent, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 interface Props<T> {
 	api: (keyWord: string) => T[];
-	template: (item: T) => JSX.Element;
+	template: (
+		item: T,
+		isSelected: boolean,
+		_onClick: (item: T) => void
+	) => JSX.Element;
 }
 
 function AutoComplete<T>({ api, template }: Props<T>) {
@@ -67,15 +65,11 @@ function AutoComplete<T>({ api, template }: Props<T>) {
 				<MatchedList>
 					{matchedList &&
 						matchedList.map((matchedItem, index) => (
-							<MatchedUser
-								key={index}
-								isSelected={index === selectedIndex}
-								onClick={() => {
+							<React.Fragment key={index}>
+								{template(matchedItem, index === selectedIndex, () => {
 									selectItem(matchedItem.name);
-								}}
-							>
-								{template(matchedItem)}
-							</MatchedUser>
+								})}
+							</React.Fragment>
 						))}
 				</MatchedList>
 			)}

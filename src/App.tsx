@@ -7,23 +7,32 @@ function App() {
 	return (
 		<>
 			<AutoComplete<User> api={findMatchedUsers} template={UserTemplate} />
-			<AutoComplete<Mbti> api={findMatchedMbtis} template={MbtiTemplate} />
+			{/* <AutoComplete<Mbti> api={findMatchedMbtis} template={MbtiTemplate} /> */}
 		</>
 	);
 }
 
 export default App;
 
-const UserTemplate = (data: User) => {
+const UserTemplate = (data: User, isSelected: boolean, _onClick: (data: User) => void) => {
 	return (
-		<UserList>
+		<UserList isSelected={isSelected} onClick={() => {_onClick}}>
 			{data.name}({data.email})
 		</UserList>
 	);
 };
 
-const UserList = styled.li`
+const UserList = styled.li<{isSelected: boolean}>`
 	color: coral;
+	padding: 10px 20px;
+	${({ isSelected }) => isSelected && 'background-color: black; color: white;'}
+	& + & {
+		border-top: 1px solid black;
+	}
+	&:hover {
+		background-color: black;
+		color: white;
+	}
 `
 
 const MbtiTemplate = (data: Mbti) => {

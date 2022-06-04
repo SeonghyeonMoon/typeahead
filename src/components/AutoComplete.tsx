@@ -8,31 +8,14 @@ interface Props<T> {
 		isSelected: boolean,
 		callback: () => void
 	) => JSX.Element;
-	criterion: string;
+	criterion: keyof T;
 }
 
 function AutoComplete<T>({ api, template, criterion }: Props<T>) {
-	const [inputData, setInputData] = useState('');
+	const [inputData, setInputData] = useState<any>('');
 	const [matchedList, setMatchedList] = useState<T[]>([]);
 	const [selectedIndex, setSelectedIndex] = useState(0);
 	const [isOpen, setIsOpen] = useState(false);
-
-	const onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
-		setInputData(value);
-		setSelectedIndex(0);
-	};
-
-	const checkKey = ({ key }: KeyboardEvent<HTMLInputElement>) => {
-		if (key === 'ArrowUp') {
-			setSelectedIndex(
-				(prev) => (prev - 1 + matchedList.length) % matchedList.length
-			);
-		} else if (key === 'ArrowDown') {
-			setSelectedIndex((prev) => (prev + 1) % matchedList.length);
-		} else if (key === 'Enter') {
-			setInputData(matchedList[selectedIndex][criterion]);
-		}
-	};
 
 	useEffect(() => {
 		const timer = setTimeout(() => {
@@ -42,10 +25,6 @@ function AutoComplete<T>({ api, template, criterion }: Props<T>) {
 			clearTimeout(timer);
 		};
 	}, [inputData]);
-
-	const selectItem = (name: string) => {
-		setInputData(name);
-	};
 
 	return (
 		<Container>
@@ -76,6 +55,27 @@ function AutoComplete<T>({ api, template, criterion }: Props<T>) {
 			)}
 		</Container>
 	);
+
+	function onChange({ target: { value } }: ChangeEvent<HTMLInputElement>){
+		setInputData(value);
+		setSelectedIndex(0);
+	};
+
+	function checkKey({ key }: KeyboardEvent<HTMLInputElement>){
+		if (key === 'ArrowUp') {
+			setSelectedIndex(
+				(prev) => (prev - 1 + matchedList.length) % matchedList.length
+			);
+		} else if (key === 'ArrowDown') {
+			setSelectedIndex((prev) => (prev + 1) % matchedList.length);
+		} else if (key === 'Enter') {
+			setInputData(matchedList[selectedIndex][criterion]);
+		}
+	};
+
+	function selectItem(name: any){
+		setInputData(name);
+	};
 }
 
 export default AutoComplete;
